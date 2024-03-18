@@ -41,7 +41,7 @@ int huffman_height_aux(MinHeapNode *root){
     }
 }
 
-HuffmanNode *init_huffman_node(int arr[], int num_digits, char character){
+HuffmanNode *init_huffman_node(int arr[], int num_digits, wchar_t character){
     HuffmanNode *huff = (HuffmanNode*)malloc(sizeof(HuffmanNode));
     huff->character = character;
     huff->code = malloc(num_digits * sizeof(int));
@@ -117,7 +117,7 @@ void print_huffman_list(HuffmanList *list){
 
     struct HuffmanNode* currentNode = list->data;
     while (currentNode != NULL) {
-        printf("Character: %c\n",currentNode->character);
+        printf("Character: %lc\n",currentNode->character);
         printf("[");
         for(int i = 0; i < currentNode->numdigits; i++){
             printf("%i,", currentNode->code[i]);

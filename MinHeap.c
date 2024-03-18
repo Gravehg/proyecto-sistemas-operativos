@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <wchar.h>
+#include <wctype.h>
 #include "MinHeap.h"
 
 MinHeap *init_min_heap(int capacity){
@@ -41,7 +43,7 @@ int is_leaf(int pos , MinHeap *heap){
     return left_child(pos)>= heap->size;
 }
 
-MinHeapNode *create_node(char character, int frequency){
+MinHeapNode *create_node(wchar_t character, int frequency){
     struct MinHeapNode *temp = (MinHeapNode*)malloc(sizeof(MinHeapNode));
     temp->character = character;
     temp->frequency = frequency;
@@ -84,7 +86,7 @@ int greater_child(MinHeap* heap, int pos){
     return right_child(pos);
 }
 
-void insert_node(MinHeap *heap, char character){
+void insert_node(MinHeap *heap, wchar_t character){
     if(heap->size >= heap->capacity){
         realloc_heap(heap);
     }
@@ -133,9 +135,9 @@ int get_size(MinHeap *heap){
     return heap->size;
 }
 
-int get_element_pos(MinHeap *heap, char character){
+int get_element_pos(MinHeap *heap, wchar_t character){
     for(int i = 0; i < heap->size; i++){
-        if(strcmp(&(heap->heap[i]->character),&(character)) == 0)
+        if(heap->heap[i]->character==character)
             return i;
     }
     return -1;
@@ -145,9 +147,9 @@ MinHeapNode *first(MinHeap *heap){
     return heap->heap[0];
 }
 
-int contains_char(MinHeap *heap, char character){
+int contains_char(MinHeap *heap, wchar_t character){
     for(int i = 0; i < heap->size; i++){
-        if(strcmp(&(heap->heap[i]->character),&(character)) == 0)
+        if(heap->heap[i]->character==character)
             return 1;
     }
     return 0;
@@ -157,8 +159,15 @@ void print_heap(MinHeap *heap){
     printf("[ ");
     for(int i = 0; i < heap->size; i++){
         printf("( ");
-        printf("%c, ", heap->heap[i]->character);
+        printf("%lc, ", heap->heap[i]->character);
         printf("%u)", heap->heap[i]->frequency);
+        printf("\n");
     }
     printf("]\n");
+}
+
+void print_to_file(FILE *file, MinHeap* heap){
+    for(int i = 0; i < heap->size; i ++){
+        fprintf(file, "%lc", heap->heap[i]->character);
+    }
 }
