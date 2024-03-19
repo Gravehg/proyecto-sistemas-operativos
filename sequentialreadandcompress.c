@@ -32,7 +32,6 @@ int main(int argc, char*argv[]){
     }
     closedir(d);
   }
-
   FILE *file;
   FILE *new_file;
   file = fopen("Frankenstein", "r"); // Open the file in read mode
@@ -43,13 +42,15 @@ int main(int argc, char*argv[]){
       return 1;
   }
   wint_t wc;
-   MinHeap *heap = init_min_heap(1024);
+  MinHeap *heap = init_min_heap(1024);
   while((wc = fgetwc(file)) != WEOF){
     insert_node(heap,(wchar_t)wc);
   }
   //print_heap(heap);
   HuffmanList* list = generate_codes_list(heap);
+  //MinHeapNode *root = create_huffman(heap);
   print_huffman_list(list);
+  //huffman_in_order_traversal(root,new_file);
 
     // Read the file character by character
 

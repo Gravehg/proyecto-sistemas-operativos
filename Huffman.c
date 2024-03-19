@@ -128,6 +128,22 @@ void print_huffman_list(HuffmanList *list){
     printf("\n");
 }
 
+void huffman_in_order_traversal(MinHeapNode *root, FILE* file){
+    if(root != NULL){
+        huffman_in_order_traversal(root->left,file);
+        fwprintf(file,L"%lc",root->character);
+        huffman_in_order_traversal(root->right, file);
+    }
+}
+
+void huffman_post_order_traversal(MinHeapNode *root, FILE* file){
+    if(root != NULL){
+        huffman_post_order_traversal(root->left, file);
+        huffman_post_order_traversal(root->right, file);
+        fwprintf(file,L"%lc",root->character);
+    }
+}
+
 
 void print_huffman_to_file(HuffmanList *list, FILE* file, char *filename){
 

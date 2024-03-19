@@ -23,11 +23,13 @@ HuffmanList* generate_codes_list(MinHeap *heap);
 void generate_codes_list_aux(MinHeapNode* root, int arr[], int top , HuffmanList *list);
 int is_end_node(MinHeapNode *node);
 void destroy_huffman(MinHeapNode* root);
+void huffman_in_order_traversal(MinHeapNode *root, FILE* file);
 
 //Managing the list
 HuffmanList *init_huffman_list();
 void insert_huffman_node(HuffmanList *list, HuffmanNode *node);
 void print_huffman_list(HuffmanList *list);
 void print_huffman_to_file(HuffmanList *list, FILE* file, char *filename);
+void huffman_post_order_traversal(MinHeapNode *root, FILE* file);
 
 #endif
