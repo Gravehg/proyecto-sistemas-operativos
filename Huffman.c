@@ -127,3 +127,8 @@ void print_huffman_list(HuffmanList *list){
     }
     printf("\n");
 }
+
+
+void print_huffman_to_file(HuffmanList *list, FILE* file, char *filename){
+
+}

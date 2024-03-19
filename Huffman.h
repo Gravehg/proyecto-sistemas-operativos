@@ -1,6 +1,7 @@
 #ifndef HUFFMAN_H
 #define HUFFMAN_H
 #include "MinHeap.h"
+#include <stdio.h>
 #include <wchar.h>
 
 typedef struct HuffmanNode{
@@ -27,5 +28,6 @@ void destroy_huffman(MinHeapNode* root);
 HuffmanList *init_huffman_list();
 void insert_huffman_node(HuffmanList *list, HuffmanNode *node);
 void print_huffman_list(HuffmanList *list);
+void print_huffman_to_file(HuffmanList *list, FILE* file, char *filename);
 
 #endif
