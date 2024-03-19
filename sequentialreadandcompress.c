@@ -1,7 +1,9 @@
+#define _DEFAULT_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <locale.h>
+#include "dirent.h"
 #include "MinHeap.h"
 #include "Huffman.h"
 
@@ -13,10 +15,23 @@ int main(int argc, char*argv[]){
    exit(1);  
   }
 
-  /**if(chdir(argv[1]) != 0){
-    perror("Couldn't change directory");
+  if(chdir(argv[1]) ==  -1){
+    perror("Couldn't change directory\n");
     exit(1);
-  }**/
+  }
+
+  DIR *d;
+  struct dirent *dir;
+  d = opendir(".");
+  if (d) {
+    while ((dir = readdir(d)) != NULL) {
+       if (dir->d_type == DT_REG)
+      {
+        printf("%s\n", dir->d_name);
+      }
+    }
+    closedir(d);
+  }
 
   FILE *file;
   FILE *new_file;
