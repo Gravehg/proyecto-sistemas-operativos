@@ -8,6 +8,8 @@
 #include "MinHeap.h"
 #include "Huffman.h"
 
+void encode_and_write(FILE *to_encode,FILE* encoded, HuffmanList *list);
+
 int main(int argc, char*argv[]){
   
   setlocale(LC_ALL, "");
@@ -24,6 +26,7 @@ int main(int argc, char*argv[]){
   DIR *d;
   FILE *to_encode;
   FILE *to_encode_table;
+  FILE *encoded;
   struct dirent *dir;
   //Name of original file
   char file_name[256];
@@ -58,17 +61,23 @@ int main(int argc, char*argv[]){
         while((wc = fgetwc(to_encode)) != WEOF){
             insert_node(heap,(wchar_t)wc);
         }
-
+        
+        print_heap(heap);
         //Generates .encoded files
         print_to_file(to_encode_table, heap);
         fclose(to_encode_table);
 
         HuffmanList *huffman = generate_codes_list(heap);
+        print_huffman_list(huffman);
+
+        encoded = fopen(file_encoded,"wb");
 
         rewind(to_encode);
-        
+
+        encode_and_write(to_encode,encoded,huffman);
 
         fclose(to_encode);
+        fclose(encoded);
         destroy_min_heap(heap);
       }
     }
@@ -86,4 +95,24 @@ int main(int argc, char*argv[]){
     // Read the file character by character
 
   return 0;
+}
+
+
+void encode_and_write(FILE *to_encode,FILE* encoded, HuffmanList *list){
+   wint_t wc;
+   while((wc = fgetwc(to_encode)) != WEOF){
+        HuffmanNode *current_node = list->data;
+        while (current_node != NULL && current_node->character != wc) {
+            current_node = current_node->next;
+        }
+        if (current_node == NULL) {
+            fprintf(stderr, "Error: Character not found in Huffman list.\n");
+            return;
+        }
+        // Write the Huffman code to the output file
+        for(int i = 0; i < current_node->numdigits; i++){
+          fprintf(encoded,"%i",current_node->code[i]);
+        }
+        //fwrite(current_node->code, sizeof(int), current_node->numdigits, encoded);
+    }
 }

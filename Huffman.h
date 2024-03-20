@@ -24,6 +24,8 @@ void generate_codes_list_aux(MinHeapNode* root, int arr[], int top , HuffmanList
 int is_end_node(MinHeapNode *node);
 void destroy_huffman(MinHeapNode* root);
 void huffman_in_order_traversal(MinHeapNode *root, FILE* file);
+void print_in_order_traversal(MinHeapNode *root);
+void printHuffmanTree(MinHeapNode* root, int depth);
 
 //Managing the list
 HuffmanList *init_huffman_list();

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
 /*Para el top en el huffman coding usar la virgulilla ~*/
 /*Pregunta un poco menos importante, esta deberia estar aqui o en el heap.h?
 Nota: NO LLAMAR DESPUES DE generate_codes_list porque esa func ya utiliza esta*/
@@ -10,11 +11,13 @@ MinHeapNode *create_huffman(MinHeap *heap){
     MinHeapNode *left;
     MinHeapNode *right;
     MinHeapNode *new;
-    while(heap->size != 1){
+    while(heap->size > 1){
         left = remove_first(heap);
         right = remove_first(heap);
 
         new = create_node('~', left->frequency + right->frequency);
+        printf("Characters are: %lc %lc\n", left->character, right->character);
+        printf("New frequency is: %u\n", left->frequency + right->frequency);
         new->left = left;
         new->right = right;
         new->isIntermediate = 1; // Igual a True en este caso
@@ -56,6 +59,8 @@ HuffmanNode *init_huffman_node(int arr[], int num_digits, wchar_t character){
 HuffmanList* generate_codes_list(MinHeap *heap){
     HuffmanList *list = init_huffman_list();
     MinHeapNode *root = create_huffman(heap);
+    //printHuffmanTree(root, 0);
+    print_in_order_traversal(root);
     int arr[huffman_height(root)];
     int top = 0;
     generate_codes_list_aux(root, arr, top, list);
@@ -144,6 +149,35 @@ void huffman_post_order_traversal(MinHeapNode *root, FILE* file){
     }
 }
 
+void print_in_order_traversal(MinHeapNode *root){
+    if(root != NULL){
+        print_in_order_traversal(root->left);
+        if(!root->isIntermediate)
+            printf("Node character is: %lc, ", root->character);
+        print_in_order_traversal(root->right);
+    }
+    printf("\n");
+}
+
+// Function to print the Huffman tree in an in-order traversal
+void printHuffmanTree(MinHeapNode* root, int depth) {
+    if (root == NULL)
+        return;
+
+    // Recursively print right subtree with increased depth
+
+    // Print current node's information with appropriate indentation
+    for (int i = 0; i < depth; i++)
+        printf("    "); // Adjust indentation as needed
+    if (!root->isIntermediate) // Non-internal node
+        printf("Character: %lc, Frequency: %d\n", root->character, root->frequency);
+    else // Internal node
+        printf("Internal Node, Frequency: %d\n", root->frequency);
+
+    // Recursively print left subtree with increased depth
+    printHuffmanTree(root->left, depth + 1);
+    printHuffmanTree(root->right, depth + 1);
+}
 
 void print_huffman_to_file(HuffmanList *list, FILE* file, char *filename){
 

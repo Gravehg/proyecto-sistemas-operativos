@@ -21,6 +21,7 @@ MinHeap *realloc_heap(MinHeap *heap){
             printf("Error reallocating memory.\n");
             return NULL;
     }
+    return heap;
 }
 
 MinHeap *destroy_min_heap(MinHeap *heap){
@@ -65,8 +66,9 @@ void swap(MinHeap *heap, int pos_one, int pos_two){
 
 void siftUp(MinHeap *heap , int pos){
     while(pos != 0 && heap->heap[pos]->frequency <  heap->heap[parent(pos)]->frequency){
-        swap(heap, pos, parent(pos));
-        pos = parent(pos);
+        int par = parent(pos);
+        swap(heap, pos, par);
+        pos = par;
     }
 }
 
@@ -88,12 +90,12 @@ int greater_child(MinHeap* heap, int pos){
 
 void insert_node(MinHeap *heap, wchar_t character){
     if(heap->size >= heap->capacity){
-        realloc_heap(heap);
+       heap =  realloc_heap(heap);
     }
     if(contains_char(heap, character)){
         int pos = get_element_pos(heap,character);
         heap->heap[pos]->frequency++;
-        siftUp(heap,pos);
+        siftDown(heap,pos);
     }else{
         MinHeapNode *new_node = create_node(character, 1);
         heap->heap[heap->size] = new_node;
@@ -104,7 +106,7 @@ void insert_node(MinHeap *heap, wchar_t character){
 
 void insert_intermediate_node(MinHeap *heap, MinHeapNode *node){
      if(heap->size >= heap->capacity){
-        realloc_heap(heap);
+        heap = realloc_heap(heap);
     }
     heap->heap[heap->size] = node;
     siftUp(heap, heap->size);
