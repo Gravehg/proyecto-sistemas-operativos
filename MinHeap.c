@@ -168,6 +168,6 @@ void print_heap(MinHeap *heap){
 
 void print_to_file(FILE *file, MinHeap* heap){
     for(int i = 0; i < heap->size; i ++){
-        fprintf(file, "%lc", heap->heap[i]->character);
+        fprintf(file, "%u %u\n", (wint_t)heap->heap[i]->character, heap->heap[i]->frequency);
     }
 }
