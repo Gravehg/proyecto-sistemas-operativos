@@ -16,8 +16,6 @@ MinHeapNode *create_huffman(MinHeap *heap){
         right = remove_first(heap);
 
         new = create_node('~', left->frequency + right->frequency);
-        printf("Characters are: %lc %lc\n", left->character, right->character);
-        printf("New frequency is: %u\n", left->frequency + right->frequency);
         new->left = left;
         new->right = right;
         new->isIntermediate = 1; // Igual a True en este caso

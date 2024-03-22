@@ -104,6 +104,16 @@ void insert_node(MinHeap *heap, wchar_t character){
     }
 }
 
+void insert_decompression(MinHeap *heap, wchar_t character, unsigned int frequency){
+    if(heap->size >= heap->capacity){
+       heap =  realloc_heap(heap);
+    }
+    MinHeapNode *new_node = create_node(character, frequency);
+    heap->heap[heap->size] = new_node;
+    siftUp(heap, heap->size);
+    heap->size++;
+}
+
 void insert_intermediate_node(MinHeap *heap, MinHeapNode *node){
      if(heap->size >= heap->capacity){
         heap = realloc_heap(heap);

@@ -35,6 +35,7 @@ void siftUp(MinHeap *heap , int pos);
 void siftDown(MinHeap*heap, int pos);
 int greater_child(MinHeap* heap, int pos);
 void insert_node(MinHeap *heap, wchar_t character);
+void insert_decompression(MinHeap *heap, wchar_t character, unsigned int frequency);
 MinHeapNode *remove_first(MinHeap *heap);
 MinHeapNode* remove_heap_element(MinHeap *heap,int pos);
 int get_size(MinHeap *heap);
