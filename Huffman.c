@@ -42,12 +42,13 @@ int huffman_height_aux(MinHeapNode *root){
     }
 }
 
-HuffmanNode *init_huffman_node(int arr[], int num_digits, wchar_t character){
+HuffmanNode *init_huffman_node(int arr[], int num_digits, wchar_t character, unsigned int frequency){
     HuffmanNode *huff = (HuffmanNode*)malloc(sizeof(HuffmanNode));
     huff->character = character;
     huff->code = malloc(num_digits * sizeof(int));
     huff->next = NULL;
     huff->numdigits = num_digits;
+    huff->frequency = frequency;
     for(int i = 0; i < num_digits; i++){
         huff->code[i] = arr[i];
     }
@@ -75,7 +76,7 @@ void generate_codes_list_aux(MinHeapNode* root, int arr[], int top , HuffmanList
         generate_codes_list_aux(root->right, arr, top + 1, list);
     }
     if(is_end_node(root)){
-        HuffmanNode *new_code  = init_huffman_node(arr, top, root->character);
+        HuffmanNode *new_code  = init_huffman_node(arr, top, root->character, root->character);
         insert_huffman_node(list, new_code);
     }
 }
@@ -179,4 +180,13 @@ void printHuffmanTree(MinHeapNode* root, int depth) {
 
 void print_huffman_to_file(HuffmanList *list, FILE* file, char *filename){
 
+}
+
+int calculate_size(HuffmanList* list){
+    HuffmanNode *node = list->data;
+    int count = 0;
+    while(node != NULL){
+        count += node->numdigits * node->frequency;
+    }
+    return count;
 }

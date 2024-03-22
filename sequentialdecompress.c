@@ -59,12 +59,13 @@ int main(int argc, char *argv[]){
     for(int i = 0; i < count; i++){
 
       const char *ext = strrchr(files[i],'.');
+
       if((!ext) || (ext == files[i])){
           printf("Not an encoded file\n");
           continue;
       }
 
-      if(strstr(files[i],".encoded")){
+      if(strstr(ext,".encoded")){
         memset(table_filename, 0, sizeof(table_filename));
         strncpy(table_filename, files[i], strlen(files[i]) - strlen(".encoded"));
         strcat(table_filename, ".table");
@@ -91,7 +92,7 @@ int main(int argc, char *argv[]){
                       read_table(table, heap);
                       fclose(table);
                 }
-
+                
                 if(decoding == NULL){
                   perror("Couldnt open file\n");
                 }else{}
@@ -123,8 +124,6 @@ void test_file(char *filename){
     wprintf(L"Character is: %lc, Frequency is: %u\n", (wchar_t)wc, frequency);
   }
 }
-
-
 
 void read_table(FILE *file, MinHeap *heap){
   wint_t wc;
