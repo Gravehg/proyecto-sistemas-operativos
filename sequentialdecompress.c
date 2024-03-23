@@ -8,10 +8,12 @@
 #include "MinHeap.h"
 #include "Huffman.h"
 #define MAX_FILENAME_LENGTH 256
+#define INPUT_SIZE 32
 
-void test_file();
+void test_file(char *filename);
 void read_table(FILE *file, MinHeap *heap);
 int compare(const void *a, const void *b);
+void decode_file(FILE *decoding, MinHeapNode* huffman, FILE* decoded);
 
 int main(int argc, char *argv[]){
   setlocale(LC_ALL, "");
@@ -95,12 +97,17 @@ int main(int argc, char *argv[]){
                 
                 if(decoding == NULL){
                   perror("Couldnt open file\n");
-                }else{}
+                }else{
+                  MinHeapNode *huffman = create_huffman(heap);
+                  decoded = fopen(file_decoded, "w");
+                  decode_file(decoding,huffman,decoded);
+                  fclose(decoding);
+                  fclose(decoded);
+                }
 
                 //print_heap(heap); Un-comment for debugging purposes.
                 destroy_min_heap(heap);
 
-                //decode_file(files[i], files[j]);
                 break;
             }
         }
@@ -136,4 +143,43 @@ void read_table(FILE *file, MinHeap *heap){
 
 int compare(const void *a, const void *b) {
     return strcmp(*(const char **)a, *(const char **)b);
+}
+
+void decode_file(FILE *decoding, MinHeapNode* huffman, FILE* decoded){
+  //Get number of bits
+  int num_bits;
+  fread(&num_bits, sizeof(int),1, decoding);
+  num_bits -= INPUT_SIZE;
+
+
+  int nbits = 0;
+  unsigned char bits = 0;
+
+  MinHeapNode *root = huffman;
+
+  int output_count = 0;
+
+  while (output_count < num_bits) {
+
+        if (nbits == 0) {
+            if (feof(decoding)) break;
+            bits = fgetc(decoding);
+            nbits = 8;
+        }
+
+        if (huffman->left == NULL && huffman->right == NULL) {
+            fputwc(huffman->character, decoded);
+            huffman = root;
+            output_count++;
+            if (output_count == num_bits)
+                break;
+        }else{
+          if (bits & (1 << (nbits - 1))) {
+            huffman = huffman->right;
+          } else {
+            huffman = huffman->left;
+          }
+          nbits--;
+        }
+    }
 }

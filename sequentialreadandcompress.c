@@ -76,7 +76,7 @@ int main(int argc, char*argv[]){
         /*Print the huffman list -!Use when debugging*/
         //print_huffman_list(huffman);
 
-        //The OUTPUT_SIZE is added to save space for 8 additional bits that have the
+        //The OUTPUT_SIZE is added to save space for 32 additional bits that have the
         //size of the output
         int size_of_output = calculate_size(huffman) + OUTPUT_SIZE;
 
@@ -109,13 +109,15 @@ int main(int argc, char*argv[]){
 }
 
 
-void encode_and_write(FILE *to_encode,FILE* encoded, HuffmanList *list, int size_of_output){
-   fwrite((const void*)&size_of_output, sizeof(int), 1, encoded);
-   int nbits = 0;
-   unsigned char bits = 0;
+void encode_and_write(FILE *to_encode, FILE *encoded, HuffmanList *list, int size_of_output) {
+    // Write the size of the output to the encoded file
+    fwrite((const void*)&size_of_output, sizeof(int), 1, encoded);
+    
+    int nbits = 0;
+    unsigned char bits = 0;
 
-   wint_t wc;
-   while((wc = fgetwc(to_encode)) != WEOF){
+    wint_t wc;
+    while ((wc = fgetwc(to_encode)) != WEOF) {
         HuffmanNode *current_node = list->data;
         while (current_node != NULL && current_node->character != wc) {
             current_node = current_node->next;
@@ -125,28 +127,19 @@ void encode_and_write(FILE *to_encode,FILE* encoded, HuffmanList *list, int size
             return;
         }
         // Write the Huffman code to the output file
-        for(int i = 0; i < current_node->numdigits; i++){
-          if(current_node->code[i] == 1){
-            bits <<= 1;
-            bits |= 1;
+        for (int i = 0; i < current_node->numdigits; i++) {
+            bits = (bits << 1) | current_node->code[i]; // Append the next bit to 'bits'
             nbits++;
-            if(nbits == 8){
-              fputc(bits,encoded);
-              bits = 0;
-              nbits = 0;
-           }
-          }
-          if(current_node->code[i] == 0){
-            bits <<= 1;
-            nbits++;
-            if(nbits == 8){
-              fputc(bits,encoded);
-              bits = 0;
-              nbits = 0;
-           }
-          }
-          //fprintf(encoded,"%i",current_node->code[i]);
+            if (nbits == 8) {
+                fputc(bits, encoded);
+                bits = 0;
+                nbits = 0;
+            }
         }
-        //fwrite(current_node->code, sizeof(int), current_node->numdigits, encoded);
+    }
+    // Flush any remaining bits
+    if (nbits > 0) {
+        bits <<= (8 - nbits); // Shift remaining bits to the leftmost position
+        fputc(bits, encoded);
     }
 }
