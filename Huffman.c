@@ -59,7 +59,7 @@ HuffmanList* generate_codes_list(MinHeap *heap){
     HuffmanList *list = init_huffman_list();
     MinHeapNode *root = create_huffman(heap);
     //printHuffmanTree(root, 0);
-    print_in_order_traversal(root);
+    //print_in_order_traversal(root);
     int arr[huffman_height(root)];
     int top = 0;
     generate_codes_list_aux(root, arr, top, list);
@@ -187,6 +187,11 @@ int calculate_size(HuffmanList* list){
     int count = 0;
     while(node != NULL){
         count += node->numdigits * node->frequency;
+        node = node->next;
     }
     return count;
+}
+
+void destroy_huffman_list(HuffmanList *list){
+    free(list);
 }

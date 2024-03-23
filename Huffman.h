@@ -35,5 +35,6 @@ void print_huffman_list(HuffmanList *list);
 void print_huffman_to_file(HuffmanList *list, FILE* file, char *filename);
 void huffman_post_order_traversal(MinHeapNode *root, FILE* file);
 int calculate_size(HuffmanList* list);
+void destroy_huffman_list(HuffmanList *list);
 
 #endif

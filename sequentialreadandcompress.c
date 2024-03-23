@@ -7,8 +7,10 @@
 #include "dirent.h"
 #include "MinHeap.h"
 #include "Huffman.h"
+#define OUTPUT_SIZE 32
 
-void encode_and_write(FILE *to_encode,FILE* encoded, HuffmanList *list);
+void encode_and_write(FILE *to_encode,FILE* encoded, HuffmanList *list, 
+int size_of_output);
 
 int main(int argc, char*argv[]){
   
@@ -62,23 +64,32 @@ int main(int argc, char*argv[]){
             insert_node(heap,(wchar_t)wc);
         }
         
-        print_heap(heap);
+        //Print the heap for debugging
+        //print_heap(heap);
+
         //Generates .encoded files
         print_to_file(to_encode_table, heap);
         fclose(to_encode_table);
 
         HuffmanList *huffman = generate_codes_list(heap);
-        print_huffman_list(huffman);
+
+        /*Print the huffman list -!Use when debugging*/
+        //print_huffman_list(huffman);
+
+        //The OUTPUT_SIZE is added to save space for 8 additional bits that have the
+        //size of the output
+        int size_of_output = calculate_size(huffman) + OUTPUT_SIZE;
 
         encoded = fopen(file_encoded,"wb");
 
         rewind(to_encode);
 
-        encode_and_write(to_encode,encoded,huffman);
+        encode_and_write(to_encode,encoded,huffman, size_of_output);
 
         fclose(to_encode);
         fclose(encoded);
         destroy_min_heap(heap);
+        destroy_huffman_list(huffman);
       }
     }
     closedir(d);
@@ -98,7 +109,11 @@ int main(int argc, char*argv[]){
 }
 
 
-void encode_and_write(FILE *to_encode,FILE* encoded, HuffmanList *list){
+void encode_and_write(FILE *to_encode,FILE* encoded, HuffmanList *list, int size_of_output){
+   fwrite((const void*)&size_of_output, sizeof(int), 1, encoded);
+   int nbits = 0;
+   unsigned char bits = 0;
+
    wint_t wc;
    while((wc = fgetwc(to_encode)) != WEOF){
         HuffmanNode *current_node = list->data;
@@ -111,7 +126,26 @@ void encode_and_write(FILE *to_encode,FILE* encoded, HuffmanList *list){
         }
         // Write the Huffman code to the output file
         for(int i = 0; i < current_node->numdigits; i++){
-          fprintf(encoded,"%i",current_node->code[i]);
+          if(current_node->code[i] == 1){
+            bits <<= 1;
+            bits |= 1;
+            nbits++;
+            if(nbits == 8){
+              fputc(bits,encoded);
+              bits = 0;
+              nbits = 0;
+           }
+          }
+          if(current_node->code[i] == 0){
+            bits <<= 1;
+            nbits++;
+            if(nbits == 8){
+              fputc(bits,encoded);
+              bits = 0;
+              nbits = 0;
+           }
+          }
+          //fprintf(encoded,"%i",current_node->code[i]);
         }
         //fwrite(current_node->code, sizeof(int), current_node->numdigits, encoded);
     }
