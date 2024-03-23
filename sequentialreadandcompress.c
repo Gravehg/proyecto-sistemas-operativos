@@ -109,6 +109,7 @@ int main(int argc, char*argv[]){
 }
 
 
+
 void encode_and_write(FILE *to_encode, FILE *encoded, HuffmanList *list, int size_of_output) {
     // Write the size of the output to the encoded file
     fwrite((const void*)&size_of_output, sizeof(int), 1, encoded);

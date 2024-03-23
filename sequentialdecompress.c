@@ -147,9 +147,9 @@ int compare(const void *a, const void *b) {
 
 void decode_file(FILE *decoding, MinHeapNode* huffman, FILE* decoded){
   //Get number of bits
-  int num_bits;
-  fread(&num_bits, sizeof(int),1, decoding);
-  num_bits -= INPUT_SIZE;
+  int input_bits_size;
+  fread(&input_bits_size, sizeof(int),1, decoding);
+  input_bits_size -= INPUT_SIZE;
 
 
   int nbits = 0;
@@ -159,8 +159,8 @@ void decode_file(FILE *decoding, MinHeapNode* huffman, FILE* decoded){
 
   int output_count = 0;
 
-  while (output_count < num_bits) {
-
+  while (output_count < input_bits_size) {
+    
         if (nbits == 0) {
             if (feof(decoding)) break;
             bits = fgetc(decoding);
@@ -171,15 +171,15 @@ void decode_file(FILE *decoding, MinHeapNode* huffman, FILE* decoded){
             fputwc(huffman->character, decoded);
             huffman = root;
             output_count++;
-            if (output_count == num_bits)
+            if (output_count == input_bits_size)
                 break;
         }else{
-          if (bits & (1 << (nbits - 1))) {
+          nbits--;
+          if (bits & (1 << (nbits))) {
             huffman = huffman->right;
           } else {
             huffman = huffman->left;
           }
-          nbits--;
         }
     }
 }
