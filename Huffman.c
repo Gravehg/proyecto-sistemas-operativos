@@ -76,7 +76,7 @@ void generate_codes_list_aux(MinHeapNode* root, int arr[], int top , HuffmanList
         generate_codes_list_aux(root->right, arr, top + 1, list);
     }
     if(is_end_node(root)){
-        HuffmanNode *new_code  = init_huffman_node(arr, top, root->character, root->character);
+        HuffmanNode *new_code  = init_huffman_node(arr, top, root->character, root->frequency);
         insert_huffman_node(list, new_code);
     }
 }
