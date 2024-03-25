@@ -153,7 +153,7 @@ void decode_file(FILE *decoding, MinHeapNode* huffman, FILE* decoded){
 
   input_bits_size -= INPUT_SIZE;
 
-  printf("Input bits size is: %i\n", input_bits_size);
+  //printf("Input bits size is: %i\n", input_bits_size);
 
 
   int nbits = 0;

@@ -95,7 +95,6 @@ int main(int argc, char*argv[]){
     closedir(d);
   }
 
-
   //print_heap(heap);
   //HuffmanList* list = generate_codes_list(heap);
   //MinHeapNode *root = create_huffman(heap);
