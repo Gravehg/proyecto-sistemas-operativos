@@ -71,6 +71,7 @@ int main(int argc, char*argv[]){
     }
     closedir(d);
   }
+
   pthread_mutex_lock(&mutex);
   while (num_threads_finished < total_threads) {
     pthread_cond_wait(&cond, &mutex);
@@ -87,8 +88,6 @@ int main(int argc, char*argv[]){
   system(remove_dir_call);
   return 0;
 }
-
-
 
 void encode_and_write(FILE *to_encode, FILE *encoded, HuffmanList *list, int size_of_output) {
     // Write the size of the output to the encoded file
@@ -156,7 +155,7 @@ void* compress_file(void * args){
     //Opens table file
     to_encode_table = fopen(file_frequency, "w");
 
-    if(to_encode == NULL){
+    if(to_encode == NULL || to_encode_table == NULL){
         perror("Error trying to open file\n");
         exit(1);
     }
