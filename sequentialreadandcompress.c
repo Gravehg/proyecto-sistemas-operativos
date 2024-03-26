@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <locale.h>
 #include <string.h>
+#include <sys/stat.h>
+#include "errno.h"
 #include "dirent.h"
 #include "MinHeap.h"
 #include "Huffman.h"
@@ -25,6 +27,17 @@ int main(int argc, char*argv[]){
     exit(1);
   }
 
+  //Buffer for the new directory name
+  char directory_name[256];
+  strcpy(directory_name, argv[1]);
+  strcat(directory_name,"_compressed");
+
+  if(mkdir(directory_name,0777) == - 1){
+    perror("Error");
+    exit(1);
+  }
+
+
   DIR *d;
   FILE *to_encode;
   FILE *to_encode_table;
@@ -42,9 +55,18 @@ int main(int argc, char*argv[]){
        if (dir->d_type == DT_REG)
       {
         
+        //Copia el nombre original del archivo a file_name
+        //Luego copia ese mismo nombre al file_frequency
+        //Luego copia ese mismo nombre al file_encoded
         strcpy(file_name,dir->d_name);
-        strcpy(file_frequency, file_name);
-        strcpy(file_encoded, file_name);
+        strcpy(file_frequency, directory_name);
+        strcpy(file_encoded, directory_name);
+        strcat(file_frequency,"/");
+        strcat(file_encoded, "/");
+        strcat(file_frequency, file_name);
+        strcat(file_encoded, file_name);
+
+
         strcat(file_encoded,".encoded");
         strcat(file_frequency,".table");
 
@@ -102,8 +124,14 @@ int main(int argc, char*argv[]){
 
   //huffman_in_order_traversal(root,new_file);
 
-    // Read the file character by character
-
+  //Create the .tgz file
+  char buff [1000];
+  sprintf(buff,"tar -zcf %s.tgz %s/",directory_name, directory_name);
+  system(buff);
+  //Remove the directory and its contents
+  char remove_dir_call[1000];
+  sprintf(remove_dir_call, "rm -r %s", directory_name);
+  system(remove_dir_call);
   return 0;
 }
 

@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <locale.h>
 #include <string.h>
+#include <sys/stat.h> 
 #include "dirent.h"
 #include "MinHeap.h"
 #include "Huffman.h"
@@ -17,15 +18,42 @@ void decode_file(FILE *decoding, MinHeapNode* huffman, FILE* decoded);
 
 int main(int argc, char *argv[]){
   setlocale(LC_ALL, "");
+
   if(argc < 2){
-   printf("Please give a directory to decompress\n");
+   printf("Please give the directory where the .tgz file to decompress is\n");
    exit(1);  
+  }
+
+  if(argc < 3){
+    printf("Please give the .tgz file name to decompress\n");
+    exit(1);
   }
 
   if(chdir(argv[1]) ==  -1){
     perror("Couldn't change directory\n");
     exit(1);
   }
+
+  struct stat stat_buffer;
+  if(!(stat (argv[2], &stat_buffer) == 0)){
+    printf("The file doesn't exist!\n");
+    exit(1);
+  }
+
+
+  //To store the system call
+  char buff[2000];
+  sprintf(buff, "tar zxf %s", argv[2]);
+  system(buff);
+
+  char buff_directory_name[1024];
+  strncpy(buff_directory_name, argv[2], strlen(argv[2]) - strlen(".tgz"));
+  if(chdir(buff_directory_name) ==  -1){
+    perror("Couldn't change to .tgz directory\n");
+    exit(1);
+  }
+
+
 
   DIR *d;
   FILE *table;
