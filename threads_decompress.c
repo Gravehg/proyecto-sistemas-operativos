@@ -5,6 +5,7 @@
 #include <locale.h>
 #include <string.h>
 #include <sys/stat.h> 
+#include <sys/wait.h>
 #include "dirent.h"
 #include "MinHeap.h"
 #include "Huffman.h"
@@ -55,14 +56,24 @@ int main(int argc, char *argv[]){
     exit(1);
   }
 
-
   //To store the system call
   char buff[2000];
   sprintf(buff, "tar zxf %s", argv[2]);
-  system(buff);
+  int err;
+  if ((err = system(buff)))
+  {
+      printf("There was an error (%i)\n", err);
+      return 1;
+  }else{
+      printf("There wasnt an error (%i)\n", err);
+  }
 
   char buff_directory_name[1024];
+
   strncpy(buff_directory_name, argv[2], strlen(argv[2]) - strlen(".tgz"));
+  //Why, is it because this operation takes some time
+  buff_directory_name[strlen(argv[2]) - strlen(".tgz")] = '\0';
+
   if(chdir(buff_directory_name) ==  -1){
     perror("Couldn't change to .tgz directory\n");
     exit(1);
