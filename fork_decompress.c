@@ -26,9 +26,6 @@ void decode_file(FILE *decoding, MinHeapNode* huffman, FILE* decoded);
 void *decode_thread(void *args);
 
 
-
-int total_processes = 0;
-
 int main(int argc, char *argv[]){
   setlocale(LC_ALL, "");
 
@@ -132,7 +129,6 @@ int main(int argc, char *argv[]){
                 arg->table_filename = strdup(files[j]);
                 arg->encoded_filename = strdup(files[i]);
                 arg->decoded_filename = strdup(file_decoded);
-                total_processes++;
                 pid_t pid =  fork();
                 if(pid == -1){
                     perror("Error forking process\n");
