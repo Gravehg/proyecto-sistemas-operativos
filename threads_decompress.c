@@ -64,10 +64,7 @@ int main(int argc, char *argv[]){
   {
       printf("There was an error (%i)\n", err);
       return 1;
-  }else{
-      printf("There wasnt an error (%i)\n", err);
   }
-
   char buff_directory_name[1024];
 
   strncpy(buff_directory_name, argv[2], strlen(argv[2]) - strlen(".tgz"));

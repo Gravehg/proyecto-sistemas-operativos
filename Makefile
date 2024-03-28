@@ -21,6 +21,12 @@ compiledecompressthreads:
 
 compiledecomthreadsdebug:
 	$(CC) -g threads_decompress.c Huffman.c MinHeap.c -o decompress_threads
+
+compileprocesscompress:
+	$(CC) fork_compress.c Huffman.c MinHeap.c -o compress_process
+
+compileprocessdecompress:
+	$(CC) fork_decompress.c Huffman.c MinHeap.c -o decompress_process
 	
 clear:
 	rm test
