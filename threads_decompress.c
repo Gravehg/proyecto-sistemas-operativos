@@ -7,6 +7,7 @@
 #include <sys/stat.h> 
 #include <sys/wait.h>
 #include "dirent.h"
+#include "time.h"
 #include "MinHeap.h"
 #include "Huffman.h"
 #include "pthread.h"
@@ -33,6 +34,9 @@ int num_threads_finished = 0;
 int total_threads = 0;
 
 int main(int argc, char *argv[]){
+  struct timespec start, end;
+  long long time;
+  clock_gettime(CLOCK_MONOTONIC, &start);
   setlocale(LC_ALL, "");
 
   if(argc < 2){
@@ -158,6 +162,11 @@ int main(int argc, char *argv[]){
     pthread_cond_wait(&cond, &mutex);
   }
   pthread_mutex_unlock(&mutex);
+
+  clock_gettime(CLOCK_MONOTONIC, &end);
+  time = 1e9 * (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec);
+  printf("Elapsed time: %lld nanoseconds\n", time);
+  return 0;
 }
 
 void test_file(char *filename){

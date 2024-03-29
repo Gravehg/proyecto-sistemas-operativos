@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 #include "errno.h"
 #include "dirent.h"
+#include "time.h"
 #include "MinHeap.h"
 #include "Huffman.h"
 #define OUTPUT_SIZE 32
@@ -25,7 +26,10 @@ int size_of_output);
 void *compress_file(void * args);
 
 int main(int argc, char*argv[]){
-  
+  struct timespec start, end;
+  long long time;
+  clock_gettime(CLOCK_MONOTONIC, &start);
+
   setlocale(LC_ALL, "");
   if(argc < 2){
    printf("Please give a directory to compress\n");
@@ -83,6 +87,10 @@ int main(int argc, char*argv[]){
   char remove_dir_call[1000];
   sprintf(remove_dir_call, "rm -r %s", directory_name);
   system(remove_dir_call);
+  
+  clock_gettime(CLOCK_MONOTONIC, &end);
+  time = 1e9 * (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec);
+  printf("Elapsed time: %lld nanoseconds\n", time);
   return 0;
 }
 

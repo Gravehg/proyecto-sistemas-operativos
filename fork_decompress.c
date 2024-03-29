@@ -7,6 +7,7 @@
 #include <sys/stat.h> 
 #include <sys/wait.h>
 #include "dirent.h"
+#include "time.h"
 #include "MinHeap.h"
 #include "Huffman.h"
 #define MAX_FILENAME_LENGTH 256
@@ -27,6 +28,10 @@ void *decode_thread(void *args);
 
 
 int main(int argc, char *argv[]){
+  struct timespec start, end;
+  long long time;
+  clock_gettime(CLOCK_MONOTONIC, &start);
+
   setlocale(LC_ALL, "");
 
   if(argc < 2){
@@ -152,6 +157,9 @@ int main(int argc, char *argv[]){
   }
   int status;
   while (wait(&status) > 0);
+  clock_gettime(CLOCK_MONOTONIC, &end);
+  time = 1e9 * (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec);
+  printf("Elapsed time: %lld nanoseconds\n", time);
 }
 
 void test_file(char *filename){

@@ -9,13 +9,17 @@
 #include "dirent.h"
 #include "MinHeap.h"
 #include "Huffman.h"
+#include "time.h"
 #define OUTPUT_SIZE 32
 
 void encode_and_write(FILE *to_encode,FILE* encoded, HuffmanList *list, 
 int size_of_output);
 
 int main(int argc, char*argv[]){
-  
+  struct timespec start, end;
+  long long time;
+  clock_gettime(CLOCK_MONOTONIC, &start);
+
   setlocale(LC_ALL, "");
   if(argc < 2){
    printf("Please give a directory to compress\n");
@@ -117,13 +121,6 @@ int main(int argc, char*argv[]){
     closedir(d);
   }
 
-  //print_heap(heap);
-  //HuffmanList* list = generate_codes_list(heap);
-  //MinHeapNode *root = create_huffman(heap);
-  //print_huffman_list(list);
-
-  //huffman_in_order_traversal(root,new_file);
-
   //Create the .tgz file
   char buff [1000];
   sprintf(buff,"tar -zcf %s.tgz %s/",directory_name, directory_name);
@@ -132,6 +129,10 @@ int main(int argc, char*argv[]){
   char remove_dir_call[1000];
   sprintf(remove_dir_call, "rm -r %s", directory_name);
   system(remove_dir_call);
+
+  clock_gettime(CLOCK_MONOTONIC, &end);
+  time = 1e9 * (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec);
+  printf("Elapsed time: %lld nanoseconds\n", time);
   return 0;
 }
 
