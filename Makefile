@@ -27,6 +27,8 @@ compileprocesscompress:
 
 compileprocessdecompress:
 	$(CC) fork_decompress.c Huffman.c MinHeap.c -o decompress_process -lrt
+
+compileall: compilecompress compiledecompress compilecompressthreads compiledecompressthreads compileprocesscompress compileprocessdecompress
 	
 clear:
-	rm test
+	rm compress decompress compress_threads decompress_threads compress_process decompress_process
