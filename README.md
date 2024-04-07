@@ -1,5 +1,4 @@
 # proyecto-sistemas-operativos
-
 Proyect one of the operating systems course, consisting of various implementations of the Huffman coding algorithm for text files.
 
 # Proyect scope
