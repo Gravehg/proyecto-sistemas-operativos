@@ -3,7 +3,7 @@ Proyect one of the operating systems course, consisting of various implementatio
 
 ## Proyect scope
 
-The proyect conists of three distinct implementations of the same algorithms, using three different approaches, sequential, threaded using pthreads, and forked using fork(). 
+The proyect consists of three distinct implementations of the same algorithms, using three different approaches, sequential, threaded using pthreads, and forked using fork(). 
 
 ## Executables
 
